@@ -1,0 +1,638 @@
+
+\chapter{Python}
+
+\section{Framework and useful}
+
+Anaconda==> Python 3.5
+
+	\code{iPython} script
+
+	\code{Jupyter} machin en ligne
+
+
+	\subsection{Jupyter notebook}
+		\code{jupyter notebook} in cmd
+
+		\code{\%matplotlib inline} makes the graphs in the page
+
+	\subsection{Jupyter console}
+
+
+		\subsubsection{commands}
+			
+			\code{ipython} open the jupyter console
+
+			\code{exit} to quit
+
+			\code{\%quickref} gives quick references
+
+			\code{?} help (after a variable for information)
+
+			\code{!command} allows to run shell commands
+
+		\subsubsection{Magics}
+
+			magics are keywords for the jupyter console
+
+			\code{\%run} runs a python script
+
+			\code{\%edit} opens a file editor, typed code is run when exiting
+
+			\code{\%debug} opens a debug window
+
+			\code{\%history}  last few commands
+
+			\code{\%save} save history in a file
+
+			\code{\%who} shows the variables
+
+			\code{\%reset} reset variables
+
+			\code{\%cpaste} opens an environment for pasting code (pasting doesnt work well in line)
+
+			\url{http://ipython.readthedocs.io/en/stable/interactive/magics.html}
+	
+
+	\subsection{bash and co}
+
+		\code{import os} work with the OS
+
+		\code{virtualenv} cmd to create virtual env (solve versioning issues)
+
+		\code{import sys} package to use argv
+
+		\begin{lstlisting}
+		__name__ == "__main__" 
+		\end{lstlisting}  
+		to avoid name mess when calling from cmd
+
+	\subsection{Useful modules}
+
+		\subsubsection{Fichiers}
+
+			\code{f = open('monFichier.txt','r')}
+
+			\subsubsection{csv}
+
+				\code{fich  = csv.reader(f)}
+
+				\code{fich = list(fich)}
+
+		\subsubsection{others}
+			
+			\code{time}
+
+			\code{datetime} (better for time zones)
+
+			\code{sys} (system function such as argv)
+
+			\code{json}
+
+			\code{json.dumps} for python to json 
+
+			\code{json.loads} for json to python
+
+
+
+\section{Core data structures and logic}
+
+
+	\subsection{Regular expressions}
+
+		\subsubsection{expressions}
+
+			\code{"abc"}
+
+			\code{"a.c"} a - any  letter  - c
+
+			\code{"a[bde]c"} a - b or d or e - c
+
+			\code{"a[d-h]c"} a -any letter between d and h -c
+
+			\code{"\^{ }abc"} abc at the beginning
+
+			\code{"abc\$"} abc at the end
+
+			\code{[6-9]} any figure between 6 and 9
+
+			\code{[6-9]\{3\}} repetition of 3 figures between 6 and 9
+
+
+			\subsubsection{re module}
+			
+				\code{import re}
+
+				\code{re.search(regex, string)} ==>returns \code{None} if nothing, match object otherwise
+
+				\code{re.sub(pattern = , repl =, string = } we want to replace patter in string with repl
+
+
+
+	\subsection{Dictionary}
+
+		\code{dic = \{\}} creates an empty dictionnary
+
+		\code{dic['mykey'] = value} add a value
+
+		\code{value = dic['mykey']} access a value
+
+	\subsection{List}
+
+		\code{li = [] } creates an empty list
+
+		\code{li = ["a", "b", "c", "d"]} 
+
+		\code{li[2] = val} update the element
+
+		\code{val = li[2]} access the element
+
+		\code{li.append()}  add to a list at the end
+
+		\code{l.delete(1)} delete elements with index 1, reindexes after it
+
+		\code{len(li)} gives you the length
+
+	\subsection{Tupples}
+		
+		\code{t = ()} creates an empty tupple
+
+		\code{t = ('truc1', truc2')}
+
+		\code{val = t[0]} access an element
+
+
+	\subsection{enumerate}
+
+		\code{for (i,item) in enumerate(MyItemList)} gets i as the index, item as the data
+
+\section{Numpy module}
+
+	\subsection{Lecture Fichiers}
+		
+\begin{lstlisting}
+myData = numpy.genfromtxt("fichier.csv", delimiter=",", skipheader = True, dtype = "U75")}
+\end{lstlisting}
+
+	\subsection{ndarray}
+		
+		\code{import numpy as np}
+
+		\code{numpy as nmyArray = np.array([1,2,3,4])}
+
+		\code{np.add(array1, array2)} concatenation
+
+		\code{np.sin(array1)} math functions for arrays
+
+		\code{np.max(array2)}
+
+		\code{myArray.shape} size
+
+		can do some matlab:
+
+		\code{myArray[:,1:3]}
+
+		\code{myArray == 10} array of booleans
+
+		\code{restriction: arrray = unique type}
+
+
+
+\section{Pandas module}
+
+	\subsection{load csv}
+
+\begin{lstlisting}
+df = pandas.read_csv("monFichier.csv") ==> DataFrame object
+\end{lstlisting}
+
+	\subsection{useful functions}
+		
+		\code{pandas.isnull()}
+
+	\subsection{DataFrame object}
+
+		\subsubsection{Columns and rows}
+			
+			\code{df["nomdelacolonne"]} gets a column as a series data type
+
+			\code{df[ ["nomdelacolonne1", "nomdelacolonne2" ] ]} gets several columns as a DataFrame data type 
+
+			\code{df["nouveau nom"] = mySerie} adds a column
+
+			\code{.head(n)} n first rows
+
+			\code{.columns} list of columns
+
+			\code{.shape} sizes  ==> [0] for nber of row, [1] for col
+
+			\code{.index} indexes
+
+			\code{.loc[i]} gets a row as a series data type
+
+			\code{.count()} with 0 or 1 nber of rows/columns
+
+			NB: can do some matlab on loc too
+
+			NB: loc works with index, may go off the rails when removing some rows, to access based on position, use iloc 
+
+			\code{.dtype} series of the data type for each column
+
+			\code{df.sort("nom de colonne", inplace=True, ascending=False)}
+
+		\subsubsection{index}
+			
+			\code{.index} indexes
+
+			\code{.reset\_{}index(drop = True)} reset the indexes to start at 0 and go one by one
+
+			\code{.set\_{}index("nomcolonne", drop = True, Inplace = False)} returns new df indexed by the chosen column (drop = True means this column  is then removed in the new one)
+
+		\subsubsection{drop}
+
+			\code{.drop('nom de colonne', axis = 1)} kill a columns
+
+			\code{.dropna()} removes rows with missing data
+
+			\code{dropna.(subset=['nomcolonne1','nomcolonne2'])}
+
+			\code{dropna.(axis=1)} removes colums with missing val
+
+
+		\subsubsection{apply}
+			
+			\code{df2 = df.apply(mafonction)} function applied to each column. If function return a single value, then output is series, If function returns a series, output is df
+
+			\code{ser = df.apply(mafonction, axis = 1)} function applied to each row, output is Series
+
+	\subsubsection{pivot table for dataframe}
+
+\begin{lstlisting}
+mean_age_by_class = df.pivot_table(index="class", values="age", aggfunc=numpy.mean) 
+\end{lstlisting}
+
+			==> Series of age mean by class
+
+\begin{lstlisting}
+statsdf.pivot_table(index="pclass", values=["age", "size"], 
+			aggfunc=np.mean)
+\end{lstlisting}
+
+			 ==> dataframe with mean age and size by class
+
+	\subsection{Series}
+
+		NB: acts as both a dictionnary and a list
+
+		NB: extends numpy ndarray operation, matlab-like stuffand boolean stuff
+
+
+		\subsubsection{creation and indexing}
+			
+			\code{myserie = Series(index = liste1, data = liste2)}
+
+			\code{myserie.index} gets the index as an Indexes object
+
+			\code{.sort\_{}index()} sort by index
+
+			\code{.sort\_'}values()} sort by values
+
+		
+		\subsubsection{Operations}
+			
+			\code{mySerie2 = mySerie / 1000 OR 12 + mySerie OR etc} scalar
+
+			\code{mySerie3 = mySerie * mySerie2} line by line
+
+			\code{.min(), .max(), ...}
+
+			\code{.idxmin()} gets the argmin, ie the index for the lowest value
+
+			\code{.mean()} removes the missing values 
+
+			\code{.isnull} column of boolean as output
+
+			\code{.tolist()}
+
+			\code{.to\_{}dict()} converts to dictionary
+
+
+
+\section{Vizualization}
+
+	\subsection{Matplotlib}
+
+		\subsubsection{pyplot basic plots}
+	
+			\begin{lstlisting}
+				import matplotlib.pyplot as plt
+			\end{lstlisting}
+
+			\code{plt.style.use("fivethirtyeight")} change style, before creating plot
+
+			\code{plt.scatter(xdata,ydata, color = 'red')}  scatter plot
+
+			\code{plt.show()} has to be added to show the graph
+
+			NB: add several scatter with same x values before show to plot several data as y
+
+			\code{plt.plot(xdata,ydata)} creates a line plot
+
+			\code{plt.bar(xdata,ydata)} creates a bar chart
+
+			\code{plt.axvline(myfloat, color='r')} add verical line 
+
+			\code{plt.barh(ydata,xdata)} creates a horizontal bar chart
+
+			\code{plt.title("montitre")} add a title
+
+			\code{plt.xlabel("monlabel")} add a label for x-axis
+
+			\code{plt.ylabel("monlabel")}
+
+		\subsubsection{pyplot Figure object}
+
+			\code{fig = plt.figure(figsize=(w,h))} sizes in inch
+
+			\code{.figsize(w,h)} size in inches
+
+			\code{.dpi()} dots per inch
+
+			\code{.add\_{}subplot(nb of rows,nb of columns, number of the plot)}
+
+		\subsubsection{pyplot Subplot and Axes object}
+
+			\code{ax = fig.addsubplot(1,1,1)} return an Axes object
+
+			\code{ax.set\_{}xlim([min,max])}} min and max of x axe
+
+			\code{ax.set\_{}ylim([min,max])} min and max of y axe
+
+			\code{ax.scatter(xdata, ydata, color=mycolor, marker=mymarker)} add points
+
+			\code{ax.set\_{}xlabel("xlegend")}
+
+			\code{ax.set\_{}ylabel("ylegend")}
+
+			\code{ax.set\_{}title("titre")}
+
+			==> wrappup: \code{ax.set(xlim =..., ylim=...)}
+
+
+		\subsection{Plots with pandas}
+
+		\subsubsection{plots on Dataframe object}
+
+			\code{pd.scatter\_{}matrix(df)} plots each series vs the others, diag is histogram
+
+			\code{df.plot(kind='...')} allows to plot each series in the df in one plot
+
+		\subsubsection{histograms in panda (derived from matplotlib)}
+
+\begin{lstlisting}
+df.hist(column = ['nomcolonne1','nomcolonne2'],layout=(2,1), grid=False, bins = 20)
+\end{lstlisting}
+
+			=>layout gives the position of the 2 graphs
+			=>grid indicates if background has a grid
+			=>bins number of bars
+
+		\subsubsection{boxplots in panda (derived form matplotlib)}
+
+			boxplot shows quartiles, if col 1 takes categorical values and col2 numerical, you'll get the quartiles of the values taken by col2 for each category in col1 
+
+\begin{lstlisting}
+df[['col1', 'col2']].boxplot(by='col1')
+\end{lstlisting}
+
+
+	\subsection{Basemap: doing maps}
+	
+		map plotting derived of matplotlib, needs to import matplotlib.pyplot
+
+		\code{from mpl\_{}toolkits.basemap import Basemap}
+
+		\code{m = Basemap(projection = 'merc', llcrnrlat = -80, urcrnrlat=80, llcrnrlon=-180,urcrnrlon=180)} instancing with mercator projection, the figures give the min and max
+
+		\code{x, y = m(longitudes, latitudes)} convert from long, to cartesian
+
+		\code{m.scatter(x,y, s = 1)} s is size of the dots
+
+		\code{m.drawcoastlines()} add the coastlines
+
+	\subsection{Seaborn (complement for matplotlib, easy vizualization)}
+
+		simply importing it changes the look of the plots for the better
+
+		==> matplotlib + pandas for exploration
+
+		==> seaborn customized and taylor-made vizualization with simple API
+
+		\code{import seaborn as sns}
+
+		\code{sns.set\_{}style(style = 'dark')} allows to change the style
+
+		\code{sns.axlabel('nameOfXAxis', 'nameOfYAxis')} legend
+
+		\subsubsection{histograms}
+
+			\code{sns.distplot(myseries,kde=False)}
+
+			\code{sns.plt.show()}
+
+			==>kde plot or dont plot the kernel distribution function
+
+		\subsubsection{boxplot}
+			\code{sns.boxplot(x=myserie1, y=myserie2, ax =myAxes)}
+
+		\subsubsection{pairplot}
+			plots each column against each column in a matrix, histo for the diagonal
+
+			\code{sns.pairplot(df, vars=['nomcolonne1', 'nomcolonne2', 'nomcolonne3'])}
+
+
+\section{Get web pages and data from API}
+
+	\subsection{Requests: work with API}
+
+		\subsubsection{params and headers}
+			are defined in the API documentation
+			usually headers are used to authenticate the user (see below)
+
+		\subsubsection{get request}
+
+			\code{req = request.get("http...")} obtain data, there is an optional 
+
+			dictionnary of parameters, and headers
+
+			\code{req.content} gets you the content of the request
+
+			\code{req.headers} dictionary of meta data on the request
+
+			\code{req.headers['content-type']} gives you the content type
+
+			\code{data = req.json()} gets the data in the form of a python object (dict, list of dict etc)
+			\code{req.status\_{}code}
+
+			==>200 = ok
+
+			==>401 = not authticated
+
+			==>404 = not found
+
+		\subsubsection{post request}
+
+			can post some jason using the post method
+
+			\code{mydict =\{'name':'some name'\}}
+			\code{req = requests.post('http...', json = mydict, headers = ...)} ==> when succesful, the status will be 201
+
+		\subsubsection{modification request}
+
+			\code{request.patch} change parts of an object
+
+			\code{request.put} send the full object to update it
+
+			\code{request.delete} to dlete stuff
+
+		\subsubsection{authentication}
+			
+			NB: using username + psswd is shut if someones get your script
+
+			token: similar to a password but with defined rights to get accesse through the api. Passed through a header in request, headers is a dictionnary
+			
+			\code{headers = \{"Authorization": "token thetoken"\}}
+
+			\code{response = requests.get("https://...", headers=headers)}	
+
+
+\section{Beautifulsoup : parsing html}
+
+	\subsection{create a parser}
+		
+		\code{resp = requests.get("some simple html page")}
+
+		\code{parser = BeautifulSoup(resp.content, 'html.parser')}
+
+	\subsection{Access stuff}
+
+		\code{parser.body.p.text} accesses the stuff
+
+		\code{parser.find\_{}all("body")[0].find\_{}all("p")} gets a list
+
+		\code{parser.find\_{}all("p", id="first")} filters by id
+
+		\code{parser.find\_{}all("p", class\_{} ="first")} filters by class
+
+		\code{parser.select("#truc")} use CSS selectors (ici id = "truc")
+
+		NB: can do nesting like in CSS too
+
+
+
+\section{Accessing databases in Python}
+
+	\subsection{sqlite3: sqlite DB}
+
+	\subsubsection{connecting}
+
+		\code{import sqlite3 as sql}
+
+		\code{conn = sql.connect('mydb.db')} ===> conn is an sqlite3.connection objecct
+
+	\subsubsection{running requests}
+
+		\subsubsection{cursor object}
+			\code{cursor = conn.cursor()}
+
+			\code{cursor.execute("query typed as a string")}
+
+			\code{res = cursor.fetchall()} ==>res is a list of tuple
+
+			\code{res = cursor.fetchone()} returns one result + increments the cursor
+
+			\code{res = cursor.fetchmany(n)} returns n results + increments the cursors
+
+	\subsubsection{skip the cursor}
+			\code{res = conn.execute("query typed as a string").fetchall())}
+
+	\subsubsection{closing the connection}
+
+		allows to save the changes (sqlite3 only) and free accesses for other users
+
+		\code{conn.close()}
+
+		\subsection{PostgreSQL: psycopg2}
+			similar to sqlite3 in the use
+
+		\subsubsection{connecting}
+			
+			\code{import psycopg2}
+
+			\code{conn = psycopg2.connect("dbname=.... user=...")} ==> need user to handle permissions
+
+		\subsubsection{transaction}
+	
+			more sophisticated than SQL: when doing changes on a data base, a transaction is open. If some of the changes fail, the all transaction fail. 
+			\code{conn.commit()} to save the changes, have to commit
+
+			\code{conn.rollback()} to cancel the changes have tto rollback
+
+			if neither is done, changes remain pending
+
+		\subsubsection{autocommit}
+			\code{conn.autocommit = True} changes are saved immediately; necessary to create a database
+
+
+\section{Maths and Stats in Python}
+
+	\subsection{scypy.stats}
+
+		\code{import scypy.stats as st}
+
+		\code{st.skew(mylist)}
+
+		\code{st.kurtosis(mylist)}
+
+		\code{slope, intercept, r\_{}value, p\_{}value, stderr\_{}slope = st.linregress(x, y)}
+
+	\subsection{numpy}
+
+		NB: most numpy function are compatible with pandas objects
+		
+		\code{np.median(mylist)}
+
+		\code{np.std(mylist)}
+
+		\code{rho, p\_{}value = pearsonr(data1, data2)} correlation and p-value
+
+		\code{cov(data1, data2)[0,1]} covariance, returns a matrix so need indexing
+
+
+	\subsection{stats in pandas}
+		
+		Series and dataframe have many methods to compute stats
+
+		\code{.mean()}
+
+		\code{.kurtosis()}
+
+		\code{.skew()}
+
+		\code{.std()}
+
+		\code{.median()}
+
+
+	\subsection{random package}
+
+		\code{import random as rdm}
+
+		\code{rdm.seed(p)} sets the seed as p, kills the randomness, good if always wanna use the same pseudo random numbers.
+
+		\code{a = rdm.sample(MyList, n)} geets a sample of size n from a list
+
+		\code{a = rdm.randint(p, q)} random number between p and q
+
+
+
+

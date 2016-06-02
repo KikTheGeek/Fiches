@@ -1,0 +1,307 @@
+\chapter{SQL}
+
+\section{Basics}
+
+
+	\subsection{Data types}
+		\code{FLOAT REAl INTEGER TEXT VARCHAR(225)...} some seem redundant, exist for compatibility
+
+	\subsection{SELECT: get some columns}
+
+\begin{lstlisting}
+SELECT A,B
+FROM MyDatabase;
+\end{lstlisting}
+
+	==> gets the colonne A and B from the DB
+
+	==> ; indicates where the requests ends
+
+
+	\subsection{WHERE: condition on the data}
+
+\begin{lstlisting}
+SELECT A,B
+FROM MyDatabase
+WHERE C < 0.5;
+\end{lstlisting}
+
+NB: see in AS for the use of HAVING when appropriate
+
+	\subsection{AS: name stuff}
+
+\begin{lstlisting}
+SELECT A as NewName FROM ...
+\end{lstlisting}
+
+		output will have A name changed to NewName
+
+		NB: WHERE does not work if you are creating an output with AS, instead, you'll need to use HAVING at the end
+
+	\subsection{Missing values}
+
+		\code{NULL} indicates a missing value
+
+		supported by WHERE: \code{WHERE A is NULL}
+
+		can be used in insert into, though some  columns have NOT NULL constraint
+
+		\subsection{LIMIT: number max of results}
+
+\begin{lstlisting}
+SELECT A,B
+FROM MyDatabase
+WHERE C < 0.5
+LIMIT 5;
+\end{lstlisting}
+
+	NB: very useful to have a look at a few rows
+
+	\subsection{ORDER BY: orders data using given column}
+
+\begin{lstlisting}
+WHERE ...
+ORDER BY D [ASC or DESC]
+\end{lstlisting}
+
+		can  order by several colum: \code{ORDER BY D [ASC or DESC], E [ASC or DESC] ...}
+
+		NB: compulsory to write ASC  or DESC for each if one of the value is DESC
+
+	\subsection{DISTINCT: eliminates duplicate}
+
+		\code{SELECT DISTINCT A,B...} gets the unique pairs of values, can use with one or more columns
+		
+		NB: can be mixed with aggregations: \code{SELECT COUNT(DISTINCT A)}
+
+	\subsection{Operators}
+
+		\code{AND: WHERE A>0.5 AND B<=C}
+
+		\code{OR: WHERE A>0.5 OR B<=C}
+
+		\code{=}
+
+		\code{!=}
+
+	\subsection{Special characters}
+
+		\code{*} allows you to get everything
+
+	\subsection{Dates and time}
+
+		SQL can handle date queries
+
+		\code{SELECT ... WHERE time\_{}column > "2015-10-30 16:00"} ==> format is "yyyy-mm-dd", time as 24:00
+
+
+
+
+\section{Maths}
+
+	\subsection{aggregators}
+
+		\code{SELECT COUNT(*) FROM} gets you the nber of rows
+
+		\code{SELECT COUNT(Column) FROM} gets you the number non null value
+
+		\code{SELECT MIN(Colums) or MAX} applies only to numerical columns
+
+		\code{SUM}
+
+		\code{AVG}
+
+		NB: can do multiple stats at once SELECT SUM(..), AVG(..) etc
+
+	\subsection{arithmetics}
+
+		can do operations on numerical values and between columns
+
+		\code{SELECT A /10.0 FROM...}
+
+		\code{SELECT B*C FROM...}
+
+		NB: integer and float types, operation with a float returns a float, if integer only returns an integer
+
+	\subsection{ROUND}
+
+		\code{SELECT ROUND(A,2)...} rounds A to 2 decimals
+
+	\subsection{GROUP BY}
+
+		allows to do group when there is a categorical column
+
+\begin{lstlisting}
+SELECT SUM(column)
+FROM ...
+GROUP BY ColumnWithCategories;
+\end{lstlisting}
+
+		NB: if no aggregation fuction will get the last row for each category
+
+
+	\subsection{joining}
+
+\begin{lstlisting}
+SELECT col1, col2, col3
+FROM db1
+INNER JOIN db2
+ON db1.col3 = db2.col7
+\end{lstlisting}
+
+		\code{INNER JOIN} display rows from both table xhere the conditions match, rows that dont have a match in the other table are not displayed
+
+		\code{LEFT OUTER JOIN} shows all the left table and a mathcing row from the right one if exixts, NULL otherwise
+
+		\code{RIGHT OUTER JOIN} same but for right side
+
+
+\section{Add and remove data}
+
+	\subsection{Inserting new row}
+
+		\code{INSERT INTO tablename VALUES (a, b, ....)}
+
+	\subsection{updating existing row}
+
+\begin{lstlisting}
+UPDATE tableName
+SET column1=value1, column2=value2, ...
+WHERE column1=value3, column2=value4, ...
+\end{lstlisting}
+
+	\subsection{deleting some rows}
+
+		\code{DELETE FROM tableName WHERE column1=value1, column2=value2, }...;
+
+\subsection{add a column}
+	
+	\code{ALTER TABLE tableName ADD columnName dataType;}
+
+	\subsection{remove a column}
+
+\begin{lstlisting}
+ALTER TABLE tableName
+DROP COLUMN columnName;
+\end{lstlisting}
+
+
+	\subsection{create a table in an existing DB}
+
+		\subsubsection{simple creation}
+
+\begin{lstlisting}
+CREATE TABLE dbName.tableName(
+   column1 dataType1 PRIMARY KEY,
+   column2 dataType2,
+   column3 dataType3,
+   ...
+);
+\end{lstlisting}
+
+			NB: primary key is often id with type integer
+			NB: can use IF NOT EXITS if fear of redudancy
+
+		\subsubsection{Using a foreign key that points to another table}
+
+\begin{lstlisting}
+CREATE TABLE dbName.tableName(
+   column1 dataType1 PRIMARY KEY,
+   name text,
+   country integer,
+   worth float,
+   FOREIGN KEY(country) REFERENCES otherTable(id)
+);
+\end{lstlisting}
+
+		will points to the table \code{otherTable} via its primary key \code{id}
+
+
+	\subsection{creating a database}
+		
+		\code{CREATE DATABASE dbName;}
+
+	\subsection{deleting a database}
+		\code{DROP DATABASE dbname;}
+
+
+
+
+\section{Schema and database query}
+
+	\subsection{PRAGMA: info about the DB}
+		
+		\code{PRAGMA table\_{}info(db)} returns info about the db (col names, types etc)
+
+	\subsection{EXPLAIN: get the query plan}
+
+		\code{EXPLAIN QUERY PLAN SELECT...} returns how the DB will run the query
+
+\section{Indexing}
+
+	\subsection{Single column}
+
+		Where indexes exist, the programm uses them automatically to optimize queries.
+
+		Indexes are automatically updated when rows or columns are changed.
+
+		For a single column, the index will store ots value in order and the primary keys of the corresponding rows
+		
+		\code{CREATE INDEX index\_{}name ON table\_{}name(column\_{}name);}
+
+		\code{CREATE INDEX IF NOT EXISTS index\_{}name ON table\_{}name(column\_{}name);}
+
+\subsection{Multi column}
+
+		\code{CREATE INDEX index\_{}name ON table\_{}name(column1\_{}name, column2\_{}name);}
+
+		1st column will be the primary
+
+
+
+
+
+
+\section{PostgreSQL command line}
+
+	\subsection{basic stuff}
+	
+		\code{psql start}
+
+		\code{psql -d dbname} starts and connects with the dbnames database
+
+		\code{\textbackslash q} quit
+
+		\code{\textbackslash ?} list of commands
+
+		\code{\textbackslash l} list of databases
+
+		\code{\textbackslash dt} tables in the current database
+
+		\code{\textbackslash du} list of users
+
+		can run any SQL query, can go next line with enter, only executed if ends with;
+
+	\subsection{user management}
+
+		\code{CREATE ROLE username} basic user wich cannot run queries
+
+		\code{CREATE ROLE userName WITH LOGIN PASSWORD `password`;} user with access
+
+		other options (after \code{WITH})
+
+		\code{CREATEDB} can create DB
+
+		\code{CREATEROLE} can create other users
+
+		\code{SUPERUSER} make the user a superuser
+
+	\subsection{ermission management}
+
+		\code{GRANT SELECT, UPDATE, ..., ON tableName TO userName;}
+		
+		\code{GRANT ALL PRIVILEGES ON tablename TO username;} everything 
+
+		\code{REVOKE... ON tableName FROM userName}; remove
+
+

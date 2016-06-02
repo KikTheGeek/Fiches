@@ -1,0 +1,68 @@
+\documentclass[a4paper,12pt]{scrreprt}
+%\documentclass[twoside =semi,a4paper,12pt]{scrreprt}
+\usepackage[T1]{fontenc}
+\usepackage[pdfpagemode=none, colorlinks=true, linkcolor=black]{hyperref} 
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+
+\usepackage[english]{babel}
+
+\usepackage{scrpage2}
+
+\usepackage{graphicx}
+
+\usepackage{xcolor} 
+
+\usepackage{multirow}%tableau avec des lignes fusionnées
+
+\usepackage{listings}% code
+
+\usepackage{amsfonts,amsmath,amssymb}
+
+\usepackage{calc}
+
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{3}
+%mettre les points après les numéros des sections
+\KOMAoptions{numbers=enddot}
+%taille des titres small/normal/big(défaut)	
+\KOMAoptions{headings=normal}
+%écrire ou pas abstract et résumé	
+%\KOMAoptions{abstract=true}
+%modifier l'espacement entre paragraphe
+%\KOMAoptions{parskip=full*}
+%définir le style des pages laissées vides
+%\KOMAoptions{clearpage=empty}
+%mettre la bibliographie ds la table des matières
+%\KOMAoptions{bibliography=totoc}
+
+
+
+%récupérer la police latex pour tout le sectionnement et pour les étiquettes des descriptions
+\addtokomafont{disposition}{\rmfamily}
+\addtokomafont{descriptionlabel}{\rmfamily}
+
+%créer une commande code
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+% kill the paragraph indent
+\setlength{\parindent}{0pt}
+
+
+
+\begin{document}
+
+
+\tableofcontents
+
+\input Fiche_Git
+
+\input Fiche_SQL
+
+\input Fiche_Python
+
+
+\end{document}

@@ -1,0 +1,58 @@
+\chapter{Git}
+
+\section{Principle}
+
+	Gits stores differences between the versions of the files at each commit. A project is a sequence of commit
+
+
+	When you create a file commit it git stores the file. When you modify the file commit it git stores the difference 
+
+
+
+\section{file statuses}
+
+ 
+ 	3 possible status for a file:
+
+	\code{commited} added to a commit and stored by git
+
+	\code{staged} currently staged for the next commit, but not yet stored by git
+
+	\code{modified} modified since the last commit, but not staged yet
+
+
+\section{steps}
+
+	\subsection{nitialize repository in a folder}
+	
+		\code{cd myFolder}
+
+		\code{git init} generates a .git file 
+
+	\subsection{tell git who you are: name + email}
+	
+		\code{git config --global user.email "your.email@domain.com"}
+	
+		\code{git config --global user.name "Your name"}
+
+	\subsection{stage files for the next commit}
+
+		\code{git add monfichier}
+
+
+		\code{git commit -m "Commit message here"} make a commit, -m is option for messages
+
+	\subsection{Save new changes by redoing previous steps}
+
+
+\section{Command recap}
+
+	\code{git status} gives the status
+
+	\code{git add monfichier} stages the file to the next commit
+
+	\code{git diff} shows difference in each file with the last commit (q to exit)
+
+	\code{git diff --staged} diff afer files are staged
+
+	\code{git log} shows the commit history (q to exit)
