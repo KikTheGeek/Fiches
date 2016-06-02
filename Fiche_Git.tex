@@ -23,7 +23,7 @@
 
 \section{steps}
 
-	\subsection{nitialize repository in a folder}
+	\subsection{initialize repository in a folder}
 	
 		\code{cd myFolder}
 
@@ -40,9 +40,16 @@
 		\code{git add monfichier}
 
 
+	\subsection{Commit}
+
 		\code{git commit -m "Commit message here"} make a commit, -m is option for messages
 
-	\subsection{Save new changes by redoing previous steps}
+
+\section{Link to Github}
+
+	\code{git remote add origins https:\/\/github.com\/UserName\/FolderName.git} add a location for your repository on github
+
+	\code{git push }
 
 
 \section{Command recap}
@@ -56,3 +63,5 @@
 	\code{git diff --staged} diff afer files are staged
 
 	\code{git log} shows the commit history (q to exit)
+
+	\code{git rm --cached monFichier} removes a file from git, cached keeps it on the drive
