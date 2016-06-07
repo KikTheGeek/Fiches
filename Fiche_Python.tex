@@ -96,6 +96,13 @@ Anaconda==> Python 3.5
 
 \section{Core data structures and logic}
 
+	\subsection{Booleans and logic operators}
+
+		\code{\|} or operator
+
+		\code{\&} and operator
+
+
 
 	\subsection{Regular expressions}
 
@@ -135,6 +142,8 @@ Anaconda==> Python 3.5
 		\code{dic['mykey'] = value} add a value
 
 		\code{value = dic['mykey']} access a value
+
+		\code{val = dic.get('mykey', False)} returns the value for mykey, False if not in the dict. Default is \code{None}
 
 	\subsection{List}
 
@@ -267,7 +276,8 @@ df = pandas.read_csv("monFichier.csv") ==> DataFrame object
 	\subsubsection{pivot table for dataframe}
 
 \begin{lstlisting}
-mean_age_by_class = df.pivot_table(index="class", values="age", aggfunc=numpy.mean) 
+mean_age_by_class = df.pivot_table(index="class", values="age", 
+				aggfunc=numpy.mean) 
 \end{lstlisting}
 
 			==> Series of age mean by class
@@ -595,6 +605,22 @@ df[['col1', 'col2']].boxplot(by='col1')
 
 		\code{slope, intercept, r\_{}value, p\_{}value, stderr\_{}slope = st.linregress(x, y)}
 
+		\subsubsection{chi-square}
+
+			\code{chisquare\_{}value, p\_{}value = st.chisquare(observed, expected)} chi-square stuff
+
+			\code{chisq\_{}value, pvalue, df, expected = chi2\_{}contingency(observed)} multi-category chi-square, can take a pandas crosstab \ref{pd.crosstab} as input directly
+
+		\sbsubsection{Working with classic probability laws}
+
+			\code(from scipy.stats import binom) binomial law
+
+			\code(binom.pmf(....)) probability mass function
+
+			\code(binom.cdf(....)) cumulative density function
+
+
+
 	\subsection{numpy}
 
 		NB: most numpy function are compatible with pandas objects
@@ -610,17 +636,22 @@ df[['col1', 'col2']].boxplot(by='col1')
 
 	\subsection{stats in pandas}
 		
-		Series and dataframe have many methods to compute stats
+		\subsubsection{Series and dataframe methodes}
 
-		\code{.mean()}
+			\code{.mean()}
 
-		\code{.kurtosis()}
+			\code{.kurtosis()}
 
-		\code{.skew()}
+			\code{.skew()}
 
-		\code{.std()}
+			\code{.std()}
 
-		\code{.median()}
+			\code{.median()}
+
+		\subsubsection{crosstab}
+			\label{pd.crosstab}
+
+			\code{table = pd.crosstab(df["col1"], [df['col2'],df['col3'...]])} gets a cross table for categorical column: how many of each cat of col2 falls into each cat of col1
 
 
 	\subsection{random package}
@@ -629,9 +660,11 @@ df[['col1', 'col2']].boxplot(by='col1')
 
 		\code{rdm.seed(p)} sets the seed as p, kills the randomness, good if always wanna use the same pseudo random numbers.
 
-		\code{a = rdm.sample(MyList, n)} geets a sample of size n from a list
+		\code{a = rdm.sample(MyList, n)} gets a sample of size n from a list
 
 		\code{a = rdm.randint(p, q)} random number between p and q
+
+		\code{a = rdm.rand(p,q,r...)} $p*q*r*$ table of random number in $\[0, 1)$, default size (when empty) is 1
 
 
 
