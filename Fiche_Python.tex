@@ -78,9 +78,22 @@ Anaconda==> Python 3.5
 
 				\code{fich = list(fich)}
 
+		\subsubsection{collections}
+
+			\code{import Counter from collections}
+
+			\code{ctr = Counter(list)} simiilar to a dict with key = the element of the list and values = the number of appearance
+
+			\code{dd = ctr.most\_{}common(n)} returns the n most common stuff in the counter
+
+		\subsubsection{time}
+
+			\code{imort time}
+
+			\code{time.cmock()} gets the processor time (useful to commpare execution speed)
+
+
 		\subsubsection{others}
-			
-			\code{time}
 
 			\code{datetime} (better for time zones)
 
@@ -93,15 +106,65 @@ Anaconda==> Python 3.5
 			\code{json.loads} for json to python
 
 
-
-\section{Core data structures and logic}
+\section{Python basic programming}
 
 	\subsection{Booleans and logic operators}
 
-		\code{\|} or operator
+		\code{|} or operator
 
 		\code{\&} and operator
 
+	\subsection{built-in functions}
+
+		\code{min}
+
+		\code{max}
+
+		\code{len}
+
+		\code{sum}
+
+		\code{sorted} gets a sorted version of a list
+
+		\code{map(func, li)} applies func to all elemements in li, output type is map
+
+		\code{filter(func, li)} returns the elements in li for which fun(element) is True. Func must returns booleans. output is a filter
+
+		\code{list()} turns an iterable (eg a map) into a list
+
+
+	\subsection{Numbers and bases}
+
+		\code{int("100",2)}  see 100 as binary, returns 4
+
+		\code{bin(a)} converts a base integer to a binary
+
+		\code{ord(a)} transforms intobase 10, works for caracters, hexadecimal
+
+		\code{'\textbackslash xea'} codes the hexadecimal nber ea
+
+
+	\subsection{caracters, unicode and byte conversion}
+
+		NB: default encoding in Python 3 is unicode with utf-8 encoding
+
+		NB: ascii is a subset of unicode, limited to 256 caracter (1 octet)
+
+		\code{ord('a')} returns the code in the form of a binary string, ascii or utf-8 by default
+
+		\code{"\textbackslash u1919"} representation of unicode caracter with code 1919
+
+		\code{"text".encode("utf-8")} return a bytes object containing the string encoded in utf-8
+
+		\code{b"text"} turns text into a byte datatype
+
+		\code{byte\_{}stuff.decode("utf-8")} decodes byte using utf-8 encoding
+	
+	\subsection{Strings}
+
+		\code{str.split(str="", num=string.count(str))} splits a string into a list, by default using space as delimiter
+
+		\code{"c".join(li)} joins the strings in li usuing the string "c" in between
 
 
 	\subsection{Regular expressions}
@@ -114,6 +177,8 @@ Anaconda==> Python 3.5
 
 			\code{"a[bde]c"} a - b or d or e - c
 
+			\code{abc\/def} abc or def
+
 			\code{"a[d-h]c"} a -any letter between d and h -c
 
 			\code{"\^{ }abc"} abc at the beginning
@@ -122,17 +187,180 @@ Anaconda==> Python 3.5
 
 			\code{[6-9]} any figure between 6 and 9
 
-			\code{[6-9]\{3\}} repetition of 3 figures between 6 and 9
-
-
-			\subsubsection{re module}
 			
-				\code{import re}
+		\subsubsection{counting}
 
-				\code{re.search(regex, string)} ==>returns \code{None} if nothing, match object otherwise
+			\code{a\{3\}} 3 repetitions of a
 
-				\code{re.sub(pattern = , repl =, string = } we want to replace patter in string with repl
+			\code{a\{3,\}}  at least 3 repetitions of a
 
+			\code{a\{3,6\}} 3 to 6 repetitions of a
+
+			\code{a?} 0 or 1 time a
+
+			\code{a+} at least one time a
+
+			\code{a*} 0 or 1 or any number of a
+
+
+
+		\subsubsection{generic types}
+			
+			\code{\textbackslash d} digit
+
+			\code{\textbackslash D} all but digit
+
+			\code{\textbackslash s} space
+
+			\code{\textbackslash S} all but space
+
+			\code{\textbackslash w} letter or \_{}
+
+			\code{\textbackslash W} opposite of  \code{\textbackslash w}
+
+			\code{\textbackslash n} return
+
+			\code{\textbackslash t} tab
+
+			\code{\textbackslash b} word limit
+
+			\code{\textbackslash B} opposite of  \code{\textbackslash b}
+
+			NB: accents are seen as word limits
+
+
+		\subsubsection{capturing and use of quastion mark}
+
+
+
+		\subsubsection{re module}
+		
+			\code{import re}
+
+			\code{re.search(regex, string)} ==>returns \code{None} if nothing, match object otherwise
+
+			\code{re.sub(pattern = , repl =, string = )} we want to replace patter in string with repl
+
+	
+	
+	\subsection{Error handling}
+
+		\subsubsection{try and except}
+
+
+\begin{lstlisting}
+try:
+    #some code
+except Exception:
+    print("there was an error")
+\end{lstlisting}
+
+			basic code to catch exceptions
+
+
+\begin{lstlisting}
+try:
+    #some code
+except Exception as exc:
+    print("there was an error")
+\end{lstlisting}
+
+			Catches the exception so you can work on it (eg get its type).
+
+		\subsubsection{few error types}
+
+			\code{ValueError} eg when trying to convert some text to integer
+
+
+
+\section{Advanced programming}
+
+	\subsection{OOP in Python}
+
+		\subsubsection{Creating a class}
+
+
+\begin{lstlisting}
+class MyClass():
+    def __init__(self, stuff):
+        self.myStuff = stuff
+     def myMethod(self, arg):
+     	#method code
+\end{lstlisting}
+
+			Here we create a class MyClass with a property mystuff, the  init function with the backslashes is compulsory.
+			The class also has a method MyMethod, self is always the first argument of a method
+
+		\subsubsection{Instancing the class}
+
+\begin{lstlisting}
+instance_of_myclass = MyClass(onestuff)
+\end{lstlisting}
+
+
+		\subsubsection{overloading operators}
+
+			Interest is that many Python built-in fonction use them, so if you have implemented the comparisons operator, you can use \code{min} and \code{max} on your function
+
+\begin{lstlisting}
+def __lt__(self, other):
+	#code to define < for this particular class
+\end{lstlisting}
+
+			\code{gt} is $>$ (greater than)
+
+			\code{ge} is $\geq$ (greter or equal)
+
+			\code{lt} is $<$ (less than)
+
+			\code{ge} is $\leq$ (less or equal)
+
+			\code{eq} is $==$
+
+			\code{ne} is $neq$ 
+
+		\subsubsection{classmethods}
+
+			Normal method are bound: they need an instance of the class to be called.
+
+			\code{{@}classmethod} keyword to create a class method
+
+
+	\subsection{Lambda functions}
+
+		function that you write inline and use once, eg in in a function that calls a funtion. The below will return the list of the squares of the elements in li.
+
+
+\begin{lstlisting}
+squares = list(map(lambda x: x**2, li))
+\end{lstlisting}
+
+
+	\subsection{Parallel computing}
+
+		\subsubsection{Thread module}
+
+			\code{import threading} allows to create and use threads
+
+\begin{lstlisting}
+mythread = threading.Thread(target=func, args=[func_arguments])
+mythread.start()
+mythread.join()
+\end{lstlisting}
+
+			Starts launch the thread while join allows to bring the thread back to the main thread.
+
+\begin{lstlisting}
+lock = threading.Lock()
+lock.acquire()
+#some operations
+lock.release()
+\end{lstlisting}
+
+		Locks cqn be used to stop other thread from accessing something
+
+
+\section{Data structures}
 
 
 	\subsection{Dictionary}
@@ -147,6 +375,8 @@ Anaconda==> Python 3.5
 
 	\subsection{List}
 
+		dynamic array
+
 		\code{li = [] } creates an empty list
 
 		\code{li = ["a", "b", "c", "d"]} 
@@ -157,9 +387,25 @@ Anaconda==> Python 3.5
 
 		\code{li.append()}  add to a list at the end
 
+		\code{li.insert(n, item)} inserts an item at the nth position in array
+
 		\code{l.delete(1)} delete elements with index 1, reindexes after it
 
+		\code{li.remove(tt)} removes tt (once) if it is in the list, error if it isnt
+
+		\code{li.count(tt)} nber of tt in li
+
+		\code{if tt in li:} test if tt is in li
+
 		\code{len(li)} gives you the length
+
+
+	\subsection{Sets}
+
+		Unordered collection of unique elements
+
+		\code{s = set([])}
+
 
 	\subsection{Tupples}
 		
@@ -174,39 +420,125 @@ Anaconda==> Python 3.5
 
 		\code{for (i,item) in enumerate(MyItemList)} gets i as the index, item as the data
 
-\section{Numpy module}
 
-	\subsection{Lecture Fichiers}
-		
+
+
+
+\section{Maths and Stats in Python}
+
+	\subsection{scypy.stats}
+
+		\code{import scypy.stats as st}
+
+		\code{st.skew(mylist)}
+
+		\code{st.kurtosis(mylist)}
+
+		\code{slope, intercept, r\_{}value, p\_{}value, stderr\_{}slope = st.linregress(x, y)}
+
+		\subsubsection{chi-square}
+
+			\code{chisquare\_{}value, p\_{}value = st.chisquare(observed, expected)} chi-square stuff
+
+			\code{chisq\_{}value, pvalue, df, expected = chi2\_{}contingency(observed)} multi-category chi-square, can take a pandas crosstab \ref{stats:panda:crosstab} as input directly
+
+		\subsubsection{Working with classic probability laws}
+
+			\code(from scipy.stats import binom) binomial law
+
+			\code(binom.pmf(....)) probability mass function
+
+			\code(binom.cdf(....)) cumulative density function
+
+
+	\subsection{numpy}
+
+		\subsubsection{Lecture Fichiers}
+			
 \begin{lstlisting}
 myData = numpy.genfromtxt("fichier.csv", delimiter=",", skipheader = True, dtype = "U75")}
 \end{lstlisting}
 
-	\subsection{ndarray}
+		\subsubsection{ndarray}
+			
+			\code{import numpy as np}
+
+			\code{nmyArray = np.array([1,2,3,4])}
+
+			\code{np.add(array1, array2)} concatenation
+
+			\code{np.sin(array1)} math functions for arrays
+
+			\code{np.max(array2)}
+
+			\code{myArray.shape} size
+
+			can do some matlab:
+
+			\code{myArray[:,1:3]}
+
+			\code{myArray == 10} array of booleans
+
+			\code{restriction: arrray = unique type}
+
+		\subsubsection{Matrixes and vectors}
+
+			\code{np.asarray([[a,b,c], [d,e,f]], dtype=np.float32)}
+
+			\code{np.dot(A,b)} matrix or vector product
+
+			\code{A.T} transpose
+
+		\subsubsection{Numpy stats}
+
+			NB: most numpy function are compatible with pandas objects
+			
+			\code{np.median(mylist)}
+
+			\code{np.std(mylist)}
+
+			\code{rho, p\_{}value = pearsonr(data1, data2)} correlation and p-value
+
+			\code{cov(data1, data2)[0,1]} covariance, returns a matrix so need indexing
+
+
+	\subsection{stats in pandas}
 		
-		\code{import numpy as np}
+		\subsubsection{Series and dataframe methods}
 
-		\code{numpy as nmyArray = np.array([1,2,3,4])}
+			\code{.mean()}
 
-		\code{np.add(array1, array2)} concatenation
+			\code{.kurtosis()}
 
-		\code{np.sin(array1)} math functions for arrays
+			\code{.skew()}
 
-		\code{np.max(array2)}
+			\code{.std()}
 
-		\code{myArray.shape} size
+			\code{.median()}
 
-		can do some matlab:
+		\subsubsection{crosstab}
+			\label{stats:panda:crosstab}
 
-		\code{myArray[:,1:3]}
+			\code{table = pd.crosstab(df["col1"], [df['col2'],df['col3'...]])} gets a cross table for categorical column: how many of each cat of col2 falls into each cat of col1
 
-		\code{myArray == 10} array of booleans
 
-		\code{restriction: arrray = unique type}
+	\subsection{random package}
+
+		\code{import random as rdm}
+
+		\code{rdm.seed(p)} sets the seed as p, kills the randomness, good if always wanna use the same pseudo random numbers.
+
+		\code{a = rdm.sample(MyList, n)} gets a sample of size n from a list
+
+		\code{a = rdm.randint(p, q)} random number between p and q
+
+		\code{a = rdm.rand(p,q,r...)} $p*q*r*$ table of random number in $\[0, 1)$, default size (when empty) is 1
 
 
 
 \section{Pandas module}
+
+	\code{import pandas as pd}
 
 	\subsection{load csv}
 
@@ -216,9 +548,13 @@ df = pandas.read_csv("monFichier.csv") ==> DataFrame object
 
 	\subsection{useful functions}
 		
-		\code{pandas.isnull()}
+		\code{pd.isnull()}
+
+		\code{pd.to\_{}datetime(data, )} take a series, string, list, tuple...  as arg 
 
 	\subsection{DataFrame object}
+
+		\code{df= pd.DataFrame(li[1:], columns = li[0] )} allows to create a df form a list of list, here the first row of the list is a header so we put it into columns
 
 		\subsubsection{Columns and rows}
 			
@@ -255,6 +591,8 @@ df = pandas.read_csv("monFichier.csv") ==> DataFrame object
 			\code{.reset\_{}index(drop = True)} reset the indexes to start at 0 and go one by one
 
 			\code{.set\_{}index("nomcolonne", drop = True, Inplace = False)} returns new df indexed by the chosen column (drop = True means this column  is then removed in the new one)
+
+			NB: to modify an index, good solutuion is to turn it into a lit using \code{.tolist()}, to modify the list and then to reassign to the index using \code{myDF.index = myList} (conversion to index type is handled autmatically)
 
 		\subsubsection{drop}
 
@@ -304,7 +642,7 @@ statsdf.pivot_table(index="pclass", values=["age", "size"],
 
 			\code{.sort\_{}index()} sort by index
 
-			\code{.sort\_'}values()} sort by values
+			\code{.sort\_{}values()} sort by values
 
 		
 		\subsubsection{Operations}
@@ -373,7 +711,7 @@ statsdf.pivot_table(index="pclass", values=["age", "size"],
 
 			\code{ax = fig.addsubplot(1,1,1)} return an Axes object
 
-			\code{ax.set\_{}xlim([min,max])}} min and max of x axe
+			\code{ax.set\_{}xlim([min,max])} min and max of x axe
 
 			\code{ax.set\_{}ylim([min,max])} min and max of y axe
 
@@ -387,8 +725,18 @@ statsdf.pivot_table(index="pclass", values=["age", "size"],
 
 			==> wrappup: \code{ax.set(xlim =..., ylim=...)}
 
+		\subsubsection{plotting vectors in pyplot}
 
-		\subsection{Plots with pandas}
+			\code{plt.quiver(X, Y, U, V, angles='xy', scale\_{}units='xy', scale=1)} 
+			X is the x origin of the vectors
+			Y is the y origin of the vectors
+			U is the moves of each vector on the x axis
+			V is the moves of each vector on the y axis
+			==> to plot 3 vectors, X, Y... will be list of length 3
+
+
+
+	\subsection{Plots with pandas}
 
 		\subsubsection{plots on Dataframe object}
 
@@ -593,78 +941,6 @@ df[['col1', 'col2']].boxplot(by='col1')
 			\code{conn.autocommit = True} changes are saved immediately; necessary to create a database
 
 
-\section{Maths and Stats in Python}
-
-	\subsection{scypy.stats}
-
-		\code{import scypy.stats as st}
-
-		\code{st.skew(mylist)}
-
-		\code{st.kurtosis(mylist)}
-
-		\code{slope, intercept, r\_{}value, p\_{}value, stderr\_{}slope = st.linregress(x, y)}
-
-		\subsubsection{chi-square}
-
-			\code{chisquare\_{}value, p\_{}value = st.chisquare(observed, expected)} chi-square stuff
-
-			\code{chisq\_{}value, pvalue, df, expected = chi2\_{}contingency(observed)} multi-category chi-square, can take a pandas crosstab \ref{pd.crosstab} as input directly
-
-		\sbsubsection{Working with classic probability laws}
-
-			\code(from scipy.stats import binom) binomial law
-
-			\code(binom.pmf(....)) probability mass function
-
-			\code(binom.cdf(....)) cumulative density function
-
-
-
-	\subsection{numpy}
-
-		NB: most numpy function are compatible with pandas objects
-		
-		\code{np.median(mylist)}
-
-		\code{np.std(mylist)}
-
-		\code{rho, p\_{}value = pearsonr(data1, data2)} correlation and p-value
-
-		\code{cov(data1, data2)[0,1]} covariance, returns a matrix so need indexing
-
-
-	\subsection{stats in pandas}
-		
-		\subsubsection{Series and dataframe methodes}
-
-			\code{.mean()}
-
-			\code{.kurtosis()}
-
-			\code{.skew()}
-
-			\code{.std()}
-
-			\code{.median()}
-
-		\subsubsection{crosstab}
-			\label{pd.crosstab}
-
-			\code{table = pd.crosstab(df["col1"], [df['col2'],df['col3'...]])} gets a cross table for categorical column: how many of each cat of col2 falls into each cat of col1
-
-
-	\subsection{random package}
-
-		\code{import random as rdm}
-
-		\code{rdm.seed(p)} sets the seed as p, kills the randomness, good if always wanna use the same pseudo random numbers.
-
-		\code{a = rdm.sample(MyList, n)} gets a sample of size n from a list
-
-		\code{a = rdm.randint(p, q)} random number between p and q
-
-		\code{a = rdm.rand(p,q,r...)} $p*q*r*$ table of random number in $\[0, 1)$, default size (when empty) is 1
 
 
 
