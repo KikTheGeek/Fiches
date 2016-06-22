@@ -1,0 +1,103 @@
+\chapter{Spark}
+
+\section{Dataframe}
+
+	Immutable once built.
+
+
+	In spark, nothing happens until an action is done. Spark only records that we want to create, transform and so on and only does it once an action is performed.
+
+	\subsection{creation}
+
+		Can create from Python list, data on drive, pandas dataframe object etc
+
+		\code{df =sqlcontext.createDataFrame(li)} creates a dataframe from the list li. Would work the same if li wwas a pandas dataframe.
+
+		\code{df =sqlcontext.createDataFrame(li, ['col1', 'col2', 'col3'])} crates a dataframe from the list li and naming the columns
+
+		\code{df = sqlContext.read.text('myfile.txt') } creates from a text file. Each line in the text file will be a row, column value stores the text form each line.
+
+
+	\subsection{Rows}
+
+		Each row is a row object, which elements can be accessed like Python attributes
+
+		\code{val = row['name']} accesses the data for column name in row
+
+		\code{val = row.name} accesses the data for column name in row
+
+
+
+	\subsection{Transformation}
+
+		Runs at executors.
+
+
+			\subsubsection{Select and drop}
+
+			Lazy evaluation: transformations are only performed, in an optimized manner, when an action is done.
+
+			\code{df2 = df.colname} creates a new df with the column colname from the previous one
+
+			\code{df2 = df.select('col1, col2')} creates a df with col1 and col2
+
+			\code{df2 = df.select('*')} creates a df with all columns
+
+			\code{df2 = df.select(df.col1, (df.col2 * 0.5).alias('mycol')} use of the dot notation, performing operations and renaming
+
+			\code{df2 = df.drop('colname')} can get rid of columns
+
+		\subsubsection{User Defined Function}
+
+			\code{piou = udf(myfunc, outputType)} generates a function usable by spark
+
+			\code{df2 = df.select(piou(df.col1).alias('newname'))} use the function
+
+			NB: the types have to follow some pre-existing spark-adapted types that you need to import eg \code{from pySpark.sql.types import IntegerType}.
+
+			NB: udf are usually slower than pre-existing spark operations, better to use udf only when no built-in spark transformation available
+
+
+		\subsubsection{Aggregates}
+
+			Same idea as in SQL, can perform operations on columns. Works with \code{groupBy}.
+
+			\code(sum, min, max, count, avg)
+
+			\code{df.groupby('col1').avg('col2', 'col3').}
+
+
+		\subsubsection{Other useful}
+
+			\code{df2 = df.filter(func)} only keeps the rows for which func is \code{True}
+
+			\code{df2 = df.distinct()} eliminates the repetitions
+
+			\code{df.orderby(cols, ascending = False)} retruns a sorted dataframe
+
+			\code{df.explode('col')}  new row for each element in a specified column, useful if a column has list as data
+
+			\code{df1.unionAll(df2)} unites two dataframe in a parallel/efficient way
+
+
+\section{Actions}
+
+	Run at executors and driver
+
+	\code{.show(n)} prints the n first rows
+
+	\code{.take(n)} returns the first n rows as a list of rows
+
+	\code{.collect()} returns all rows as a list of rows, beware it may not fit in memory
+
+	\code{.count()} retunrs the number of rows
+
+	\code{.describe()} provides some stats on numerical columns in a nice way (count, mean, stdev, min, max)
+
+	\code{df.cache()} tells spark to keep in memory, if you have further computations to do, so that it wont have to re-read again
+
+
+
+
+
+
