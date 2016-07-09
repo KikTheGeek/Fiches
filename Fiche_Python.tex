@@ -88,7 +88,7 @@ Anaconda==> Python 3.5
 
 		\subsubsection{time}
 
-			\code{imort time}
+			\code{import time}
 
 			\code{time.cmock()} gets the processor time (useful to commpare execution speed)
 
@@ -166,6 +166,8 @@ Anaconda==> Python 3.5
 
 		\code{"c".join(li)} joins the strings in li usuing the string "c" in between
 
+		\code{'sometext'.startwith('abc')} finds if a sting starts with "abc", returns a boolean
+
 
 	\subsection{Regular expressions}
 
@@ -186,6 +188,8 @@ Anaconda==> Python 3.5
 			\code{"abc\$"} abc at the end
 
 			\code{[6-9]} any figure between 6 and 9
+
+			\code{[\^{}6-9]} anything that is not 6789
 
 			
 		\subsubsection{counting}
@@ -357,7 +361,7 @@ lock.acquire()
 lock.release()
 \end{lstlisting}
 
-		Locks cqn be used to stop other thread from accessing something
+		Locks can be used to stop other thread from accessing something
 
 
 \section{Data structures}
@@ -471,11 +475,17 @@ myData = numpy.genfromtxt("fichier.csv", delimiter=",", skipheader = True, dtype
 
 			\code{np.max(array2)}
 
+			\code{np.sum(myarray, axis =1)} alloxs to sum along one axis (returns an array)
+
 			\code{myArray.shape} size
 
 			can do some matlab:
 
 			\code{myArray[-1:4:-2]}
+
+			\code{myarray = np.linspace(start, end, num = 50, endpoint=True)} puts fifty value including start and stop (if enpoint is True)
+
+			\code{X, Y = np.meshgrid(x,y)} creates meshgrid matrixes from x, y lists of coordinates
 
 			\code{myArray == 10} array of booleans
 
@@ -492,6 +502,8 @@ myData = numpy.genfromtxt("fichier.csv", delimiter=",", skipheader = True, dtype
 			\code{np.ones((n,m))} matrix full of ones
 
 			\code{np.zeros((n,m))} matrix full of zeros
+
+			\code{np.empty((n,m))} empty matrix
 
 			\code{A = np.concatenate((A,B), axis = 1)} matrix concatenation, axis determines if vertical or horizontal.
 
@@ -538,22 +550,39 @@ myData = numpy.genfromtxt("fichier.csv", delimiter=",", skipheader = True, dtype
 
 		\code{a = rdm.randint(p, q)} random number between p and q
 
-		\code{a = rdm.rand(p,q,r...)} $p*q*r*$ table of random number in $\[0, 1)$, default size (when empty) is 1
+		\code{a = rdm.rand(p,q,r...)} $p\times q \times r $ table of random number in $\[0, 1\)$, default size (when empty) is 1
 
 		\code{np.random.permutation(myArray)} combines numpy and random to get rand om permutation on an array
 
+		\code{np.random.choice(data, size=n)} randomly choses n points within datas
+
 	\subsection{Scikit-learn: machine-learning module}
+
+		\subsubsection{Useful functions}
+
+			\code{from sklearn.metrics.pairwise import euclidean\_{}distances}
+
+			\code{euclidean\_{}distances(data1,data2)} euclidean distance, works well with dataset rows, but need to keep only numerical columns
+
+			\code{from sklearn.cros\_{}validation import KFold}
+
+			\code{kf = KFold(sample\_{}size, n\_{}folds=n, random\_{}state=1)} create n folds of test, train lists of index to use on algorithm
+
+			\code{for train,test in kf:}
 
 		\subsubsection{Linear regression}
 
 \begin{lstlisting}
-from sklearn.linear_model imporregressor.fit(predictors, to_predict)t LinearRegression
-regressor = LinearRegression()next_day_predictions = regressor.predict(predictors)
-regressor.fit(predictors, to_predict)
-predictions = regressor.predict(new_pedictors)
+from sklearn.linear_model import LinearRegression
+lm = LinearRegression()
+lm.fit(predictors, to_predict)
+predictions = lm.predict(new_pedictors)
 \end{lstlisting}
 
 			The predictor in \code{fit} and in \code{predict} has to be a dataframe. To do that with a single column in a pre-existing df we can trick pandas into returning a df instead of a series by inputting \code{df[['colname']]}.
+
+			\code{lm.coeff\_{}} list of coefficients
+
 
 		\subsubsection{logistic regression: one class}
 
@@ -567,23 +596,95 @@ pred =  regressor.predict_proba(new_predictors)
 
 			Same retrictrion on the inputs as for the linear regression. 
 
-			\code{predict\_{}proba()} returns a proba to be in the class for single-classification problem. The output is a $2 \times input-size$ array, with proba on column $[:,1]$.
+			\code{predict\_{}proba()} returns a proba to be in the class for single-classification problem. The output is a $2 \times input-size$ array, with proba to have 0 on column $[:,0]$ and proba to have 1 on column $[:,1]$.
 
 			\code{predict()} returns the predicted labels.
 
 			See doc for multi-class problems.
 
+			\code{fpr, tpr, thresholds = sklearn.metrics.roc\_{}curve(labels, proba)} studies indicator of the classificator depending on chosen threshold.
+
+			\code{auc\_{}score = roc\_{}auc\_{}score(proba, labels)} gets the auc score
+
+
+		\subsubsection{clustering}
+
+\begin{lstlisting}
+from sklearn.cluster import KMeans
+kmeans_model = KMeans(n_clusters=N, random_state=1)
+distances = kmeans_model.fit_transform(data)
+labels = kmeans_model.labels_
+\end{lstlisting}
+
+			k-means cluster with N clusters. Better than brutal approach where the clusters depend heavily on the initialization.
+
+			\code{distances} is a numpy array, for each row in data, it gives the distance to each of the clusters. 
+
+			The \code{random\_{}state} initialize a random state for the cluster, fixing it allows to get the same results every time the algo is ran
+
+			\code{labels\_{}} contains the cluster to which each row in data is associated
+
+		\subsubsection{Decision trees}
+
+\begin{lstlisting}
+from sklearn.tree import DecisionTreeClassifier
+clf = DecisionTreeClassifier(random_state=1)
+clf.fit(df[['col1','col2'...]],income['col_target'])
+predictions = clf.predict(data)
+\end{lstlisting}
+
+			Classification decision tree, the class for regression is \code{ DecisionTreeRegressor}.
+
+			\code{clf = DecisionTreeClassifier(random\_{}state=1, max\_{}depth = 4, min\_{}samples\_{}split = 25)} adding constraints on the tree can reduce over-fitting
+
+		\subsubsection{Random forest}
+
+			NB: different techniques
+
+			\begin{description}
+
+			\item[bagging:] generate several trees byt randomely sampling the training set and take the average of the tree rerults.
+
+			\item{[andom features:] putting random constraints on the maximization of the information gain, eg by letting only pick from 2 randomly selected columns at each step.
+
+			\end{description}
+
+\begin{lstlisting}
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier(n_estimators=10, random_state=1, min_samples_leaf=75)
+clf.fit(data, labels)
+\end{lstlisting}
+
+	Creates a random forest classifier using both bagging and random features. For a regression model, use class \code{RandomForestRegressor}.
+
+
+	\subsection{statsmodel.api}
+
+		\subsubsection{linear regression}
+
+			\code{import statsmodels.api as sm}
+
+			\code{X = sm.add\_{}constant(X)} adds a column of ones (constant term)
+
+			\code{linear = sm.OLS(y,X)} clasical least square fit
+
+			\code{linearfit = linear.fit} stocks the model
+
+			\code{linearfit.summary()} info about the model
+
+				\code{linearfit.params} model parameters
 
 
 \section{Pandas module}
 
 	\code{import pandas as pd}
 
-	\subsection{load csv}
+	\subsection{Load and write csv}
 
-\begin{lstlisting}
-df = pandas.read_csv("monFichier.csv") ==> DataFrame object
-\end{lstlisting}
+		\code{df = pandas.read\_{}csv("monFichier.csv", index\_{}col = True)} creates a dataframe from a csv file, \code{index\_{}col} indicates wether the first column should be used as index
+
+		\code{df.to\_{}csv("file.csv", index=False)}
+
 
 	\subsection{useful functions}
 		
@@ -596,15 +697,17 @@ df = pandas.read_csv("monFichier.csv") ==> DataFrame object
 		\code{df= pd.DataFrame(li[1:], columns = li[0] )} allows to create a df form a list of list, here the first row of the list is a header so we put it into columns
 
 
-		\code{dataframe["col_name"] = dataframe["col_name"].astype(float)} column type conversion.
+		\code{dataframe["colname"] = dataframe["colname"].astype(float)} column type conversion.
 
 		\subsubsection{Columns and rows}
 			
 			\code{df["nomdelacolonne"]} gets a column as a series data type
 
-			\code{df[ ["nomdelacolonne1", "nomdelacolonne2" ] ]} gets several columns as a DataFrame data type 
+			\code{df[ ["colname1", "colname2" ] ]} gets several columns as a DataFrame data type 
 
 			\code{df["nouveau nom"] = mySerie} adds a column
+
+			\code{df3 = pd.concat([df, df2], axis=1)} aggregates 2 dataframe
 
 			\code{.head(n)} n first rows
 
@@ -636,11 +739,13 @@ df = pandas.read_csv("monFichier.csv") ==> DataFrame object
 
 			NB: to modify an index, good solutuion is to turn it into a lit using \code{.tolist()}, to modify the list and then to reassign to the index using \code{myDF.index = myList} (conversion to index type is handled autmatically)
 
-		\subsubsection{drop}
+		\subsubsection{drop and fill}
 
 			\code{.drop('nom de colonne', axis = 1)} kill a columns
 
 			\code{.dropna()} removes rows with missing data
+
+			\code{df['col'] = df['col'].fillna(val)} fills NA values with val
 
 			\code{dropna.(subset=['nomcolonne1','nomcolonne2'])}
 
@@ -653,7 +758,7 @@ df = pandas.read_csv("monFichier.csv") ==> DataFrame object
 
 			\code{ser = df.apply(mafonction, axis = 1)} function applied to each row, output is Series
 
-	\subsubsection{pivot table for dataframe}
+		\subsubsection{pivot table for dataframe}
 
 \begin{lstlisting}
 mean_age_by_class = df.pivot_table(index="class", values="age", 
@@ -668,6 +773,16 @@ statsdf.pivot_table(index="pclass", values=["age", "size"],
 \end{lstlisting}
 
 			 ==> dataframe with mean age and size by class
+
+		\subsubsection{Preparing for ML algo}
+
+			\code{df2 = pd.get\_{}dummies(df["col"], prefix="pref")} creates a dataframe with new columns with 0 and 1 from a multi-category column with numbers
+			
+			\code{col = pandas.Categorical.from\_{}array(df["colname"])} changes a categorical column into a number column
+
+			\code{col.codes} returns the label data
+
+			\code{df2 = df.sample(frac=bag\_{}proportion, replace=True, random\_{}state=i)} sampling with replacement (eg to create random forest with bagging technique)
 
 	\subsection{Series}
 
@@ -703,6 +818,8 @@ statsdf.pivot_table(index="pclass", values=["age", "size"],
 
 			\code{.tolist()}
 
+			\code{.unique()} returns a series with duplicates removed
+
 			\code{.to\_{}dict()} converts to dictionary
 
 
@@ -719,7 +836,7 @@ statsdf.pivot_table(index="pclass", values=["age", "size"],
 
 			\code{plt.style.use("fivethirtyeight")} change style, before creating plot
 
-			\code{plt.scatter(xdata,ydata, color = 'red')}  scatter plot
+			\code{plt.scatter(xdata,ydata, color = 'red', c = categories)}  scatter plot, the optional c should be a categorical column, it will assign different colors to the label 
 
 			\code{plt.show()} has to be added to show the graph
 
@@ -923,7 +1040,7 @@ df[['col1', 'col2']].boxplot(by='col1')
 
 		\code{parser.find\_{}all("p", class\_{} ="first")} filters by class
 
-		\code{parser.select("#truc")} use CSS selectors (ici id = "truc")
+		\code{parser.select("\#truc")} use CSS selectors (ici id = "truc")
 
 		NB: can do nesting like in CSS too
 

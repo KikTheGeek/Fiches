@@ -1,101 +1,204 @@
 \chapter{Spark}
 
-\section{Dataframe}
 
-	Immutable once built.
+\section{Framework}
 
+	\subsection{pyspark }
 
-	In spark, nothing happens until an action is done. Spark only records that we want to create, transform and so on and only does it once an action is performed.
-
-	\subsection{creation}
-
-		Can create from Python list, data on drive, pandas dataframe object etc
-
-		\code{df =sqlcontext.createDataFrame(li)} creates a dataframe from the list li. Would work the same if li wwas a pandas dataframe.
-
-		\code{df =sqlcontext.createDataFrame(li, ['col1', 'col2', 'col3'])} crates a dataframe from the list li and naming the columns
-
-		\code{df = sqlContext.read.text('myfile.txt') } creates from a text file. Each line in the text file will be a row, column value stores the text form each line.
+		\code{SparkContext} basic spark object, cores/threads are set aside for you when you create it
 
 
-	\subsection{Rows}
+		NB: in databrick, a SparkContext object is pre-created for you and named \code{sc}
 
-		Each row is a row object, which elements can be accessed like Python attributes
+		\code{SparkContext.SQLContext}
 
-		\code{val = row['name']} accesses the data for column name in row
+		\code{HiveContext} can be embedded in SQLCOntext, brings Hive compatibility (ie compatibility with Hadoop structure and other format)
 
-		\code{val = row.name} accesses the data for column name in row
+
+	\subsection{Databrick}
+
+		\code{display(df)} nice way to display a dataframe
+
+
+
+\section{Basics}
+
+	\subsection{DataFrame}
+
+		Immutable once built. Every trabsformation creates a new dataframe
+
+
+		In spark, nothing happens until an action is done. Spark only records that we want to create, transform and so on and only does it once an action is performed.
+
+		\code{df.printSchema()} gets you the schema
+
+		\code{df.rdd.getNumPartitions()} on how many partition will it be split
+
+		\subsubsection{Creation}
+
+			Can create from Python list, data on drive, pandas dataframe object etc
+
+			\code{df =sqlcontext.createDataFrame(li)} creates a dataframe from the list li. Would work the same if li wwas a pandas dataframe.
+
+			\code{df =sqlcontext.createDataFrame(li, ['col1', 'col2', 'col3'])} crates a dataframe from the list li and naming the columns
+
+			\code{df = sqlContext.read.text('myfile.txt') } creates from a text file. Each line in the text file will be a row, column value stores the text form each line.
+
+
+		\subsubsection{Rows}
+
+			Each row is a row object, which elements can be accessed like Python attributes
+
+			\code{val = row['name']} accesses the data for column name in row
+
+			\code{val = row.name} accesses the data for column name in row
+
+		\subsubsection{Columns}
+
+			Columns are very similar to pandas dataframe, a column can be called by \code{df['colname']} or \code{df.colname}.
+
+			Transformations that require cilumn names can take either \code{'col1', 'col2'} or \code{df.col1, df.col2} as argument
 
 
 
 	\subsection{Transformation}
 
-		Runs at executors.
 
+		Lazy evaluation: transformations are only performed, in an optimized manner, when an action is done.
 
 			\subsubsection{Select and drop}
 
-			Lazy evaluation: transformations are only performed, in an optimized manner, when an action is done.
 
-			\code{df2 = df.colname} creates a new df with the column colname from the previous one
+				\code{df2 = df.colname} creates a new df with the column colname from the previous one
 
-			\code{df2 = df.select('col1, col2')} creates a df with col1 and col2
+				\code{df2 = df.select('col1, col2')} creates a df with col1 and col2
 
-			\code{df2 = df.select('*')} creates a df with all columns
+				\code{df2 = df.select('*')} creates a df with all columns
 
-			\code{df2 = df.select(df.col1, (df.col2 * 0.5).alias('mycol')} use of the dot notation, performing operations and renaming
+				\code{df2 = df.select(df.col1, (df.col2 * 0.5).alias('mycol')} use of the dot notation, performing operations and renaming
 
-			\code{df2 = df.drop('colname')} can get rid of columns
-
-		\subsubsection{User Defined Function}
-
-			\code{piou = udf(myfunc, outputType)} generates a function usable by spark
-
-			\code{df2 = df.select(piou(df.col1).alias('newname'))} use the function
-
-			NB: the types have to follow some pre-existing spark-adapted types that you need to import eg \code{from pySpark.sql.types import IntegerType}.
-
-			NB: udf are usually slower than pre-existing spark operations, better to use udf only when no built-in spark transformation available
+				\code{df2 = df.drop('colname')} can get rid of columns
 
 
-		\subsubsection{Aggregates}
+			\subsubsection{Joins}
 
-			Same idea as in SQL, can perform operations on columns. Works with \code{groupBy}.
 
-			\code(sum, min, max, count, avg)
+				\code{df3 = df1.join(df2, on, how = inner)} performs a join
 
-			\code{df.groupby('col1').avg('col2', 'col3').}
+				\code{on} join columns name, 
+
+				\code{how} must be \code{inner, outer, left\_{}outer, right\_{}outer, left\_{}semi}, default is inner
+
+				Usually will put a select after the join if wanna pick certain column
+
+
+
+			\subsubsection{User Defined Function}
+
+				\code{piou = udf(myfunc, outputType)} generates a function usable by spark
+
+				\code{df2 = df.select(piou(df.col1).alias('newname'))} use the function
+
+\begin{lstlisting}
+from pyspark.sql.types import BooleanType
+less_ten = udf(lambda s: s < 10, BooleanType())
+lambdaDF = DF.filter(less_ten(DF.age))
+\end{lstlisting}
+
+				NB: the types have to follow some pre-existing spark-adapted types that you need to import eg \code{from pySpark.sql.types import IntegerType}.
+
+				NB: udf are usually slower than pre-existing spark operations, better to use udf only when no built-in spark transformation available
+
+
+			\subsubsection{Aggregates}
+
+				Same idea as in SQL, can perform operations on columns. Works with \code{groupBy}.
+
+				Groupby does not return a dataframe object, but a groupeddata
+
+				\code(sum, min, max, count, avg)
+
+				\code{df.groupby('col1').avg('col2', 'col3').}
+
+
+				\code{df.groupby('col1').count().}
+
+
 
 
 		\subsubsection{Other useful}
 
-			\code{df2 = df.filter(func)} only keeps the rows for which func is \code{True}
+			\code{df2 = df.filter(func)} only keeps the rows for which func is \code{True}, eg it could \code{df.col1 >5}, func can also be a string evaluated y pyspark eg \code{"age>5"}, it is useful when using aliases.
 
 			\code{df2 = df.distinct()} eliminates the repetitions
 
-			\code{df.orderby(cols, ascending = False)} retruns a sorted dataframe
+			\code{df2 = df1.dropduplicate{df1.colname}} eliminates the repetition based on one or several columns
 
-			\code{df.explode('col')}  new row for each element in a specified column, useful if a column has list as data
+			\code{df.orderBy(cols, ascending = False)} retruns a sorted dataframe, eg \code{df2 = df1.orderBy(df1.age.desc())}
 
 			\code{df1.unionAll(df2)} unites two dataframe in a parallel/efficient way
 
+			\code{sampledDF = df.sample(withReplacement=False, fraction=0.10)} return a random sample containing 10\% of the dataframe, \code{withReplacement} allows repetition in the sample
 
-\section{Actions}
+		\subsubsection{Explain}
 
-	Run at executors and driver
 
-	\code{.show(n)} prints the n first rows
+			\code{df.SomeTransformations.explain()} shows the optimized query plan 
 
-	\code{.take(n)} returns the first n rows as a list of rows
+			\code{df.SomeTransformations.explain(True)} shows the all phases of the query plan 
 
-	\code{.collect()} returns all rows as a list of rows, beware it may not fit in memory
+		\subsubsection{Cache}
 
-	\code{.count()} retunrs the number of rows
+			\code{df.cache()} tells spark to keep in memory, if you have further computations to do, so that it wont have to re-read again. IF too much in memory may erase other and have to re-build them again later (automated)
 
-	\code{.describe()} provides some stats on numerical columns in a nice way (count, mean, stdev, min, max)
+			\code{df.is\_{}cached} returns \code{True} if the dataframe is cached.
 
-	\code{df.cache()} tells spark to keep in memory, if you have further computations to do, so that it wont have to re-read again
+			\code{df.unpersist()} removes a df from cqche
 
+			
+
+	\subsection{Actions}
+
+		Run at executors and driver
+
+		\code{.show(n, truncate = True)} prints the n first rows, truncates the long values by defautlt
+
+		\code{.take(n)} returns the first n rows as a list of rows
+
+		\code{.first()} equivalent to \code{.take(1)[0]}
+
+		\code{.collect()} returns all rows as a list of rows, beware it may not fit in memory of the driver
+
+		\code{.count()} retunrs the number of rows
+
+		\code{.describe()} provides some stats on numerical columns in a nice way (count, mean, stdev, min, max)
+
+
+	\subsection{functions}
+
+		\subsubsection{pyspark.sql.functions}
+
+			\code{from pyspark.sql.functions import lit, concat....}
+
+			\code{lit(val)} creates a column with the value \code{val}
+
+			\code{concat(col1, col2)} concatenates 2 columns
+
+			\code{df.explode('col')}  new row for each element in a specified column, useful if a column has list as data
+
+
+		\subsection{spark notebook helpers import printDataFrames}
+
+			\code{from spark\_{}notebook\_{}helpers import printDataFrames}
+
+			\code{printDataFrames(True)} shows all dataframe in the notebook and their columns 
+
+
+	\subsection{Debugging and coding style}
+
+		Debugging is made difficult by the azy evaluation process. Error will only occur when an action is taken and will point to the line of the action even if the potential faulty transformation is above in the code.
+
+		It is recommended to use a coding style that alternates actions and transformation so that errors are easier to detect. Using lambdas can also make code more readable.
 
 
 
